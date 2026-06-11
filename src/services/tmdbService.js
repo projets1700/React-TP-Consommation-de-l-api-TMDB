@@ -40,6 +40,17 @@ export async function getMediaTrailer(type, id) {
   }
 }
 
+export async function getPopularMovies() {
+  try {
+    const response = await fetch(`${API_BASE}/api/movies/popular`)
+    if (!response.ok) throw new Error('Erreur API popular')
+    return await response.json()
+  } catch (error) {
+    console.error(error)
+    return { results: [] }
+  }
+}
+
 export async function getFavorites(type) {
   try {
     const response = await fetch(`${API_BASE}/api/favorites/${type}`)

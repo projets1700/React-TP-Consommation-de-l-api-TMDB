@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom'
 
-// Barre de navigation principale du site.
-// Elle permet d'aller vers l'accueil, les films et les séries.
-function Header({ onToggleTheme }) {
+function Header() {
   return (
     <header className="header-bar">
-      <Link to="/" className="brand-link">TMDB Explorer</Link>
+      <Link to="/" className="brand-link">
+        <span className="brand-cine">CINE</span><span className="brand-scape">SCAPE</span>
+      </Link>
       <nav className="nav-row">
         <ul className="nav-list">
           <li><Link to="/">Accueil</Link></li>
@@ -13,9 +13,6 @@ function Header({ onToggleTheme }) {
           <li><Link to="/recherche-series">Séries</Link></li>
           <li><Link to="/favoris">Favoris</Link></li>
         </ul>
-        <button type="button" className="theme-toggle" onClick={onToggleTheme}>
-          Thème
-        </button>
       </nav>
     </header>
   )
