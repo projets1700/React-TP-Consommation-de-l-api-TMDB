@@ -40,6 +40,43 @@ export async function getMediaTrailer(type, id) {
   }
 }
 
+export async function getFavorites(type) {
+  try {
+    const response = await fetch(`${API_BASE}/api/favorites/${type}`)
+    if (!response.ok) throw new Error('Erreur API favoris')
+    return await response.json()
+  } catch (error) {
+    console.error(error)
+    return []
+  }
+}
+
+export async function deleteFavorite(type, id) {
+  try {
+    const response = await fetch(`${API_BASE}/api/favorites/${type}/${id}`, { method: 'DELETE' })
+    if (!response.ok) throw new Error('Erreur suppression favori')
+    return await response.json()
+  } catch (error) {
+    console.error(error)
+    return null
+  }
+}
+
+export async function updateFavoriteStatus(type, id, status) {
+  try {
+    const response = await fetch(`${API_BASE}/api/favorites/${type}/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status }),
+    })
+    if (!response.ok) throw new Error('Erreur mise à jour statut')
+    return await response.json()
+  } catch (error) {
+    console.error(error)
+    return null
+  }
+}
+
 export async function getGenres() {
   try {
     const response = await fetch(`${API_BASE}/api/genres/movies`)

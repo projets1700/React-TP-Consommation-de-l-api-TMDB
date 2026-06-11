@@ -453,6 +453,95 @@ h2 {
   color: var(--text-color);
 }
 
+.fav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.fav-card {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(180deg, var(--panel-color), var(--panel-strong));
+  box-shadow: 0 4px 12px var(--shadow-color);
+  padding: 0.85rem;
+}
+
+.fav-poster {
+  width: 70px;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+  background: #111827;
+}
+
+.fav-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.fav-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.fav-date {
+  font-size: 0.8rem;
+  color: var(--muted-color);
+}
+
+.fav-status {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted-color);
+}
+
+.fav-status--vu {
+  color: #86efac;
+}
+
+.fav-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.35rem;
+}
+
+.fav-btn {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-pill);
+  padding: 0.35rem 0.85rem;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.fav-btn:hover {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
+.fav-btn--seen {
+  background: var(--button-color);
+  color: var(--button-text);
+}
+
+.fav-btn--delete {
+  background: var(--panel-strong);
+  color: #fca5a5;
+  border-color: rgba(252, 165, 165, 0.2);
+}
+
 .genre-nav-btn {
   display: inline-block;
   margin-bottom: 1.5rem;
