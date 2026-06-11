@@ -101,6 +101,7 @@ function PageParGenre() {
 
   return (
     <section className="page">
+      <button type="button" className="back-link" onClick={() => navigate(-1)}>← Page précédente</button>
       <h1>Parcourir par genre</h1>
 
       {genresLoading && <p>Chargement des genres…</p>}

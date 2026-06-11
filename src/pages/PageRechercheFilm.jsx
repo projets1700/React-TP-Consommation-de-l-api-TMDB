@@ -49,6 +49,7 @@ function PageRechercheFilm() {
 
   return (
     <section className="page">
+      <button type="button" className="back-link" onClick={() => navigate(-1)}>← Page précédente</button>
       <h1>Recherche de films</h1>
 
       <SearchPanel
