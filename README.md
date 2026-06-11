@@ -1,16 +1,68 @@
-# React + Vite
+# Évaluation React — Explorateur de films & séries
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Application React permettant de rechercher des films et séries, de consulter leurs fiches détail et de gérer une liste de favoris.
 
-Currently, two official plugins are available:
+## Prérequis
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- [Node.js](https://nodejs.org/) version 18 ou supérieure
+- npm (inclus avec Node.js)
 
-## React Compiler
+## Installation
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm install
+```
 
-## Expanding the ESLint configuration
+## Lancer le projet
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Mode développement
+
+```bash
+npm run dev
+```
+
+L'application est ensuite accessible sur [http://localhost:5173](http://localhost:5173).
+
+### Build de production
+
+```bash
+npm run build
+```
+
+### Prévisualiser le build
+
+```bash
+npm run preview
+```
+
+## Structure du projet
+
+```
+src/
+├── components/       # Composants réutilisables (Header, TrailerCard)
+├── hooks/            # Hooks personnalisés (useSearchMedia)
+├── pages/            # Pages de l'application
+│   ├── PageRechercheFilm.jsx
+│   ├── PageRechercheSerie.jsx
+│   ├── PageDetailMedia.jsx
+│   └── Layout.jsx
+├── services/
+│   └── tmdbService.js  # Appels à l'API
+└── main.jsx
+```
+
+## Fonctionnalités
+
+- Recherche de films et de séries via l'API
+- Affichage des bandes-annonces YouTube dans la grille de résultats
+- Fiche détail par film ou série (poster, synopsis, genres, note)
+- Ajout aux favoris
+- Thèmes visuels (Défaut, Gris, Lune)
+- Gestion des états : chargement, erreur, aucun résultat
+
+## Technologies utilisées
+
+- React 19 (hooks fonctionnels)
+- React Router v7
+- Vite
+- API REST (fetch natif)

@@ -17,7 +17,7 @@ function Layout() {
 
   return (
     <div className={`app-shell ${theme}`}>
-      <Header onToggleTheme={cycleTheme} themeLabel={theme.replace('theme-', '')} />
+      <Header onToggleTheme={cycleTheme} />
       <main className="content-shell">
         <Outlet />
       </main>

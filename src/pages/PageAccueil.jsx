@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom'
 function PageAccueil() {
   return (
     <section className="page">
-      <p className="eyebrow">Étape 1 — structure multi-pages</p>
       <h1>Bienvenue dans TMDB Explorer</h1>
       <p className="lead">Choisissez la catégorie à explorer : films ou séries.</p>
 

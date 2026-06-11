@@ -1,47 +1,80 @@
-import { Link, useLocation } from 'react-router-dom'
+import { useState, useEffect, useRef } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import useSearchMedia from '../hooks/useSearchMedia'
+import { addFavorite, getMediaTrailer } from '../services/tmdbService'
+import SearchPanel from '../components/SearchPanel'
+import MediaCard from '../components/MediaCard'
 
-// Page dédiée à la recherche de séries.
-// Elle suit la même logique que la page des films.
 function PageRechercheSerie() {
   const location = useLocation()
-  const { query, loading, results, handleChange, handleSearch } = useSearchMedia('tv', location.state?.restoreQuery || '')
+  const navigate = useNavigate()
+  const { query, loading, error, results, handleChange, handleSearch } = useSearchMedia('tv', location.state?.restoreQuery || '')
+  const [feedback, setFeedback] = useState('')
+  const [trailers, setTrailers] = useState({})
+  const searchGen = useRef(0)
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setTrailers({})
+    const gen = ++searchGen.current
+    results.forEach(item => {
+      getMediaTrailer('tv', item.id).then(key => {
+        if (key && searchGen.current === gen) {
+          setTrailers(prev => ({ ...prev, [item.id]: key }))
+        }
+      })
+    })
+  }, [results])
+
+  const handleAddFavorite = async (e, item) => {
+    e.stopPropagation()
+    const saved = await addFavorite('tv', item)
+    setFeedback(saved
+      ? `${item.name} ajouté aux favoris.`
+      : "Impossible d'ajouter cette série aux favoris."
+    )
+  }
+
+  const handleCardClick = (item) => {
+    navigate(`/serie/${item.id}`, {
+      state: { returnPath: '/recherche-series', searchQuery: query },
+    })
+  }
 
   return (
     <section className="page">
       <h1>Recherche de séries</h1>
-      <p className="lead">Même logique que pour les films, avec une page dédiée.</p>
 
-      <section className="search-panel">
-        <label className="search-label" htmlFor="serie-search">Votre recherche</label>
-        <div className="search-row">
-          <input id="serie-search" type="search" value={query} onChange={handleChange} placeholder="Rechercher une série..." />
-          <button type="button" onClick={handleSearch}>Chercher</button>
-        </div>
-      </section>
+      <SearchPanel
+        id="serie-search"
+        placeholder="Rechercher une série..."
+        value={query}
+        onChange={handleChange}
+        onSearch={handleSearch}
+      />
 
       {loading && <p>Chargement…</p>}
-
-      {!loading && results.length === 0 && query && <p>Aucun résultat pour cette recherche.</p>}
+      {error && <p className="search-error">{error}</p>}
+      {feedback && <p className="favorite-feedback">{feedback}</p>}
+      {!loading && !error && results.length === 0 && query && <p>Aucun résultat pour cette recherche.</p>}
 
       <section className="card-grid">
-        {results.map((item) => {
+        {results.map(item => {
           const posterUrl = item.poster_path
             ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
             : 'https://via.placeholder.com/500x750?text=Affiche+indisponible'
 
           return (
-            <Link
-              to={`/serie/${item.id}`}
-              state={{ returnPath: '/recherche-series', searchQuery: query }}
-              className="choice-card media-card"
+            <MediaCard
               key={item.id}
-            >
-              <img className="media-poster" src={posterUrl} alt={item.name} />
-              <strong>{item.name}</strong>
-              <small>{item.first_air_date || 'Date inconnue'}</small>
-              <p>{item.overview || 'Aucune description disponible.'}</p>
-            </Link>
+              item={item}
+              title={item.name}
+              date={item.first_air_date}
+              posterUrl={posterUrl}
+              trailerKey={trailers[item.id] || null}
+              onCardClick={() => handleCardClick(item)}
+              onFavorite={e => handleAddFavorite(e, item)}
+            />
           )
         })}
       </section>
