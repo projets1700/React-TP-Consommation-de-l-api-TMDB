@@ -343,9 +343,28 @@ h2 {
 }
 
 .back-link {
-  color: #e5e7eb;
-  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  align-self: flex-start;
+  background: var(--panel-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-pill);
+  padding: 0.5rem 1.1rem;
+  font: inherit;
   font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px var(--shadow-color);
+  transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.back-link:hover {
+  transform: translateY(-1px);
+  background: var(--panel-strong);
+  box-shadow: 0 6px 16px var(--shadow-color);
 }
 
 .search-panel {
