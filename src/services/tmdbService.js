@@ -40,6 +40,28 @@ export async function getMediaTrailer(type, id) {
   }
 }
 
+export async function getGenres() {
+  try {
+    const response = await fetch(`${API_BASE}/api/genres/movies`)
+    if (!response.ok) throw new Error('Erreur API genres')
+    return await response.json()
+  } catch (error) {
+    console.error(error)
+    return { genres: [] }
+  }
+}
+
+export async function getMoviesByGenre(genreId, page = 1) {
+  try {
+    const response = await fetch(`${API_BASE}/api/movies/genre/${genreId}?page=${page}&sortBy=popularity.desc`)
+    if (!response.ok) throw new Error('Erreur API genre')
+    return await response.json()
+  } catch (error) {
+    console.error(error)
+    return { results: [] }
+  }
+}
+
 export async function addFavorite(type, item) {
   const endpoint = type === 'movies' ? 'movies' : 'series'
   const payload =

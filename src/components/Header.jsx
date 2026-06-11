@@ -11,6 +11,7 @@ function Header({ onToggleTheme }) {
           <li><Link to="/">Accueil</Link></li>
           <li><Link to="/recherche-films">Films</Link></li>
           <li><Link to="/recherche-series">Séries</Link></li>
+          <li><Link to="/par-genre">Par genre</Link></li>
         </ul>
         <button type="button" className="theme-toggle" onClick={onToggleTheme}>
           Thème
