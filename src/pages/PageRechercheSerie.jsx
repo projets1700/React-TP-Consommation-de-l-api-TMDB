@@ -1,9 +1,11 @@
+import { Link, useLocation } from 'react-router-dom'
 import useSearchMedia from '../hooks/useSearchMedia'
 
 // Page dédiée à la recherche de séries.
 // Elle suit la même logique que la page des films.
 function PageRechercheSerie() {
-  const { query, loading, results, handleChange, handleSearch } = useSearchMedia('tv')
+  const location = useLocation()
+  const { query, loading, results, handleChange, handleSearch } = useSearchMedia('tv', location.state?.restoreQuery || '')
 
   return (
     <section className="page">
@@ -29,12 +31,17 @@ function PageRechercheSerie() {
             : 'https://via.placeholder.com/500x750?text=Affiche+indisponible'
 
           return (
-            <article className="choice-card media-card" key={item.id}>
+            <Link
+              to={`/serie/${item.id}`}
+              state={{ returnPath: '/recherche-series', searchQuery: query }}
+              className="choice-card media-card"
+              key={item.id}
+            >
               <img className="media-poster" src={posterUrl} alt={item.name} />
               <strong>{item.name}</strong>
               <small>{item.first_air_date || 'Date inconnue'}</small>
               <p>{item.overview || 'Aucune description disponible.'}</p>
-            </article>
+            </Link>
           )
         })}
       </section>

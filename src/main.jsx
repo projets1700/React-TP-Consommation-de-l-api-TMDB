@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './index.css'
 import Layout from './pages/Layout'
 import PageAccueil from './pages/PageAccueil'
+import PageDetailMedia from './pages/PageDetailMedia'
 import PageRechercheFilm from './pages/PageRechercheFilm'
 import PageRechercheSerie from './pages/PageRechercheSerie'
 
@@ -17,6 +18,8 @@ const router = createBrowserRouter([
       { path: '/', element: <PageAccueil /> },
       { path: '/recherche-films', element: <PageRechercheFilm /> },
       { path: '/recherche-series', element: <PageRechercheSerie /> },
+      { path: '/film/:id', element: <PageDetailMedia type="movies" /> },
+      { path: '/serie/:id', element: <PageDetailMedia type="tv" /> },
     ],
   },
 ])

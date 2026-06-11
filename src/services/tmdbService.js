@@ -14,3 +14,14 @@ export async function searchMedia(type, query) {
     return { results: [] }
   }
 }
+
+export async function getMediaDetails(type, id) {
+  try {
+    const response = await fetch(`${API_BASE}/api/${type}/${id}`)
+    if (!response.ok) throw new Error('Erreur API détail')
+    return await response.json()
+  } catch (error) {
+    console.error(error)
+    return null
+  }
+}
