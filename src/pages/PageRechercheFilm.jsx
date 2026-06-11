@@ -23,13 +23,20 @@ function PageRechercheFilm() {
       {!loading && results.length === 0 && query && <p>Aucun résultat pour cette recherche.</p>}
 
       <section className="card-grid">
-        {results.map((item) => (
-          <article className="choice-card" key={item.id}>
-            <strong>{item.title}</strong>
-            <small>{item.release_date || 'Date inconnue'}</small>
-            <p>{item.overview || 'Aucune description disponible.'}</p>
-          </article>
-        ))}
+        {results.map((item) => {
+          const posterUrl = item.poster_path
+            ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
+            : 'https://via.placeholder.com/500x750?text=Affiche+indisponible'
+
+          return (
+            <article className="choice-card media-card" key={item.id}>
+              <img className="media-poster" src={posterUrl} alt={item.title} />
+              <strong>{item.title}</strong>
+              <small>{item.release_date || 'Date inconnue'}</small>
+              <p>{item.overview || 'Aucune description disponible.'}</p>
+            </article>
+          )
+        })}
       </section>
     </section>
   )
