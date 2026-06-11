@@ -39,7 +39,7 @@ npm run preview
 
 ```
 src/
-├── components/       # Composants réutilisables (Header, TrailerCard)
+├── components/       # Composants réutilisables (Header, MediaCard, MediaDetail, SearchPanel, TrailerCard)
 ├── hooks/            # Hooks personnalisés (useSearchMedia)
 ├── pages/            # Pages de l'application
 │   ├── PageRechercheFilm.jsx
