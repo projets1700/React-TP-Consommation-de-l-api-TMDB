@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, Link } from 'react-router-dom'
 import useSearchMedia from '../hooks/useSearchMedia'
 import { addFavorite, getMediaTrailer } from '../services/tmdbService'
 import SearchPanel from '../components/SearchPanel'
@@ -58,6 +58,8 @@ function PageRechercheFilm() {
         onChange={handleChange}
         onSearch={handleSearch}
       />
+
+      <Link to="/par-genre" className="genre-nav-btn">Parcourir par genre</Link>
 
       {loading && <p>Chargement…</p>}
       {error && <p className="search-error">{error}</p>}
