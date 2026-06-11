@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { getMediaDetails } from '../services/tmdbService'
+import { getMediaDetails, addFavorite } from '../services/tmdbService'
 import MediaDetail from '../components/MediaDetail'
 
 function PageDetailMedia({ type }) {
@@ -9,6 +9,7 @@ function PageDetailMedia({ type }) {
   const navigate = useNavigate()
   const [media, setMedia] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [feedback, setFeedback] = useState('')
 
   useEffect(() => {
     let ignore = false
@@ -26,12 +27,27 @@ function PageDetailMedia({ type }) {
     return () => { ignore = true }
   }, [id, type])
 
+  useEffect(() => {
+    if (!feedback) return
+    const timer = setTimeout(() => setFeedback(''), 3000)
+    return () => clearTimeout(timer)
+  }, [feedback])
+
   const handleClose = () => {
     const returnPath = location.state?.returnPath || (type === 'movies' ? '/recherche-films' : '/recherche-series')
     navigate(returnPath, {
       replace: true,
       state: { restoreQuery: location.state?.searchQuery || '' },
     })
+  }
+
+  const handleAddFavorite = async () => {
+    const saved = await addFavorite(type, media)
+    const name = type === 'movies' ? media.title : media.name
+    setFeedback(saved
+      ? `${name} ajouté aux favoris.`
+      : "Impossible d'ajouter aux favoris."
+    )
   }
 
   if (loading) return <p className="page">Chargement du détail…</p>
@@ -42,7 +58,7 @@ function PageDetailMedia({ type }) {
       <button type="button" className="back-link" onClick={handleClose}>
         ← Retour à la recherche
       </button>
-      <MediaDetail media={media} type={type} />
+      <MediaDetail media={media} type={type} onFavorite={handleAddFavorite} feedback={feedback} />
     </section>
   )
 }

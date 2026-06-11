@@ -14,6 +14,12 @@ function PageRechercheFilm() {
   const searchGen = useRef(0)
 
   useEffect(() => {
+    if (!feedback) return
+    const timer = setTimeout(() => setFeedback(''), 3000)
+    return () => clearTimeout(timer)
+  }, [feedback])
+
+  useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setTrailers({})
     const gen = ++searchGen.current
