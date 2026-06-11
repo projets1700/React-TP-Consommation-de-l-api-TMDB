@@ -54,7 +54,7 @@ export async function addFavorite(type, item) {
         }
       : {
           id: item.id,
-          title: item.name,
+          name: item.name,
           poster_path: item.poster_path || '',
           release_date: item.first_air_date || '',
           overview: item.overview || '',
