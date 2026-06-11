@@ -5,7 +5,6 @@ import MediaCard from '../components/MediaCard'
 
 function PageParGenre() {
   const navigate = useNavigate()
-  const [mediaType, setMediaType] = useState('movies')
   const [genres, setGenres] = useState([])
   const [selectedGenre, setSelectedGenre] = useState(null)
   const [results, setResults] = useState([])
@@ -18,22 +17,14 @@ function PageParGenre() {
 
   useEffect(() => {
     let ignore = false
-    setGenresLoading(true)
     getGenres().then(data => {
       if (!ignore) setGenres(data.genres || [])
     }).finally(() => { if (!ignore) setGenresLoading(false) })
     return () => { ignore = true }
   }, [])
 
-  const handleTypeChange = (type) => {
-    setMediaType(type)
-    setSelectedGenre(null)
-    setResults([])
-    setError(null)
-  }
-
   useEffect(() => {
-    if (!selectedGenre || mediaType !== 'movies') return
+    if (!selectedGenre) return
     let ignore = false
 
     async function load() {
@@ -52,7 +43,7 @@ function PageParGenre() {
 
     load()
     return () => { ignore = true }
-  }, [selectedGenre, mediaType])
+  }, [selectedGenre])
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -90,73 +81,49 @@ function PageParGenre() {
     <section className="page">
       <h1>Parcourir par genre</h1>
 
-      <div className="type-tabs">
-        <button
-          type="button"
-          className={`type-tab${mediaType === 'movies' ? ' type-tab--active' : ''}`}
-          onClick={() => handleTypeChange('movies')}
-        >
-          Films
-        </button>
-        <button
-          type="button"
-          className={`type-tab${mediaType === 'tv' ? ' type-tab--active' : ''}`}
-          onClick={() => handleTypeChange('tv')}
-        >
-          Séries
-        </button>
+      {genresLoading && <p>Chargement des genres…</p>}
+
+      <div className="genre-list">
+        {genres.map(genre => (
+          <button
+            key={genre.id}
+            type="button"
+            className={`genre-btn${selectedGenre?.id === genre.id ? ' genre-btn--active' : ''}`}
+            onClick={() => setSelectedGenre(genre)}
+          >
+            {genre.name}
+          </button>
+        ))}
       </div>
 
-      {mediaType === 'tv' ? (
-        <p className="genre-unavailable">
-          La navigation par genre n&apos;est pas disponible pour les séries : l&apos;API ne fournit pas d&apos;endpoint <code>/api/genres/tv</code> ni <code>/api/tv/genre/:id</code>.
-        </p>
-      ) : (
+      {selectedGenre && (
         <>
-          {genresLoading && <p>Chargement des genres…</p>}
-          <div className="genre-list">
-            {genres.map(genre => (
-              <button
-                key={genre.id}
-                type="button"
-                className={`genre-btn${selectedGenre?.id === genre.id ? ' genre-btn--active' : ''}`}
-                onClick={() => setSelectedGenre(genre)}
-              >
-                {genre.name}
-              </button>
-            ))}
-          </div>
-
-          {selectedGenre && (
-            <>
-              <h2 className="genre-title">Films : {selectedGenre.name}</h2>
-              {loading && <p>Chargement…</p>}
-              {error && <p className="search-error">{error}</p>}
-              {feedback && <p className="favorite-feedback">{feedback}</p>}
-              {!loading && !error && results.length === 0 && (
-                <p>Aucun film trouvé pour ce genre.</p>
-              )}
-              <section className="card-grid">
-                {results.map(item => {
-                  const posterUrl = item.poster_path
-                    ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
-                    : 'https://via.placeholder.com/500x750?text=Affiche+indisponible'
-                  return (
-                    <MediaCard
-                      key={item.id}
-                      item={item}
-                      title={item.title}
-                      date={item.release_date}
-                      posterUrl={posterUrl}
-                      trailerKey={trailers[item.id] || null}
-                      onCardClick={() => handleCardClick(item)}
-                      onFavorite={e => handleAddFavorite(e, item)}
-                    />
-                  )
-                })}
-              </section>
-            </>
+          <h2 className="genre-title">Films : {selectedGenre.name}</h2>
+          {loading && <p>Chargement…</p>}
+          {error && <p className="search-error">{error}</p>}
+          {feedback && <p className="favorite-feedback">{feedback}</p>}
+          {!loading && !error && results.length === 0 && (
+            <p>Aucun film trouvé pour ce genre.</p>
           )}
+          <section className="card-grid">
+            {results.map(item => {
+              const posterUrl = item.poster_path
+                ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
+                : 'https://via.placeholder.com/500x750?text=Affiche+indisponible'
+              return (
+                <MediaCard
+                  key={item.id}
+                  item={item}
+                  title={item.title}
+                  date={item.release_date}
+                  posterUrl={posterUrl}
+                  trailerKey={trailers[item.id] || null}
+                  onCardClick={() => handleCardClick(item)}
+                  onFavorite={e => handleAddFavorite(e, item)}
+                />
+              )
+            })}
+          </section>
         </>
       )}
     </section>
