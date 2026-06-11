@@ -2,9 +2,9 @@
 // On lui donne le type de média (movies ou tv) et la recherche saisie.
 const API_BASE = 'https://api-media-ipssi.julienpoirier-webdev.com'
 
-export async function searchMedia(type, query) {
+export async function searchMedia(type, query, page = 1) {
   const response = await fetch(
-    `${API_BASE}/api/${type}/search?query=${encodeURIComponent(query)}&page=1&includeFavorites=false`,
+    `${API_BASE}/api/${type}/search?query=${encodeURIComponent(query)}&page=${page}&includeFavorites=false`,
   )
   if (!response.ok) throw new Error('Erreur API fournie')
   return await response.json()

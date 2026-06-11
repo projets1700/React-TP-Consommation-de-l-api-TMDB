@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 function Header() {
+  const { pathname } = useLocation()
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
@@ -17,10 +18,11 @@ function Header() {
       </Link>
       <nav className="nav-row">
         <ul className="nav-list">
-          <li><Link to="/">Accueil</Link></li>
+          {pathname !== '/' && <li><Link to="/">Accueil</Link></li>}
           <li><Link to="/recherche-films">Films</Link></li>
           <li><Link to="/recherche-series">Séries</Link></li>
           <li><Link to="/favoris">Favoris</Link></li>
+          <li><Link to="/recommandes">Recommandés</Link></li>
         </ul>
       </nav>
     </header>

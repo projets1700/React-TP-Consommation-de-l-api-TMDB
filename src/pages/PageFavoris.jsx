@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getFavorites, deleteFavorite, updateFavoriteStatus } from '../services/tmdbService'
+import { removeFavoritedId } from '../utils/favorites'
 
 function FavCard({ item, type, onDelete, onMarkSeen }) {
   const title = type === 'movies' ? item.title : item.name
@@ -71,6 +72,7 @@ function PageFavoris() {
 
   const handleDelete = async (type, id) => {
     await deleteFavorite(type, id)
+    removeFavoritedId(type === 'movies' ? 'movies' : 'series', id)
     if (type === 'movies') setMovies(prev => prev.filter(m => m.id !== id))
     else setSeries(prev => prev.filter(s => s.id !== id))
   }

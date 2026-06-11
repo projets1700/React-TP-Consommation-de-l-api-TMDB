@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { getPopularMovies, getPopularSeries, getGenres } from '../services/tmdbService'
 import MediaRow from '../components/MediaRow'
+import { translateGenre } from '../utils/genres'
 
 const GENRE_GRADIENTS = {
   28:    'linear-gradient(135deg, #E50914 0%, #FF6B35 100%)',
@@ -95,12 +96,12 @@ function PageAccueil() {
                   key={genre.id}
                   className="genre-hero-card"
                   style={{ background: GENRE_GRADIENTS[genre.id] || 'linear-gradient(135deg,#222,#444)' }}
-                  onClick={() => navigate('/par-genre')}
+                  onClick={() => navigate('/par-genre', { state: { genre } })}
                   role="button"
                   tabIndex={0}
-                  onKeyDown={e => e.key === 'Enter' && navigate('/par-genre')}
+                  onKeyDown={e => e.key === 'Enter' && navigate('/par-genre', { state: { genre } })}
                 >
-                  <span className="genre-hero-name">{genre.name}</span>
+                  <span className="genre-hero-name">{translateGenre(genre.name)}</span>
                 </div>
               ))}
             </div>

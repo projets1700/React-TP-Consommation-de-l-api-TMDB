@@ -1,32 +1,14 @@
 import { useState, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { getGenres, getMoviesByGenre, getMediaTrailer, addFavorite } from '../services/tmdbService'
+import { getFavoritedIds, addFavoritedId } from '../utils/favorites'
 import MediaCard from '../components/MediaCard'
-
-const GENRES_FR = {
-  'Action': 'Action',
-  'Adventure': 'Aventure',
-  'Animation': 'Animation',
-  'Comedy': 'Comédie',
-  'Crime': 'Crime',
-  'Documentary': 'Documentaire',
-  'Drama': 'Drame',
-  'Family': 'Famille',
-  'Fantasy': 'Fantastique',
-  'History': 'Histoire',
-  'Horror': 'Horreur',
-  'Music': 'Musique',
-  'Mystery': 'Mystère',
-  'Romance': 'Romance',
-  'Science Fiction': 'Science-fiction',
-  'TV Movie': 'Téléfilm',
-  'Thriller': 'Thriller',
-  'War': 'Guerre',
-  'Western': 'Western',
-}
+import Toast from '../components/Toast'
+import { translateGenre } from '../utils/genres'
 
 function PageParGenre() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [genres, setGenres] = useState([])
   const [selectedGenre, setSelectedGenre] = useState(null)
   const [results, setResults] = useState([])
@@ -35,12 +17,20 @@ function PageParGenre() {
   const [error, setError] = useState(null)
   const [feedback, setFeedback] = useState('')
   const [trailers, setTrailers] = useState({})
+  const [favoritedIds, setFavoritedIds] = useState(() => getFavoritedIds('movies'))
   const searchGen = useRef(0)
 
   useEffect(() => {
     let ignore = false
     getGenres().then(data => {
-      if (!ignore) setGenres(data.genres || [])
+      if (ignore) return
+      const list = data.genres || []
+      setGenres(list)
+      const fromHome = location.state?.genre
+      if (fromHome) {
+        const match = list.find(g => g.id === fromHome.id)
+        if (match) setSelectedGenre(match)
+      }
     }).finally(() => { if (!ignore) setGenresLoading(false) })
     return () => { ignore = true }
   }, [])
@@ -93,6 +83,11 @@ function PageParGenre() {
       ? `${item.title} ajouté aux favoris.`
       : "Impossible d'ajouter ce film aux favoris."
     )
+    if (saved) {
+      addFavoritedId('movies', item.id)
+      setFavoritedIds(prev => new Set([...prev, item.id]))
+    }
+    return saved
   }
 
   const handleCardClick = (item) => {
@@ -113,17 +108,17 @@ function PageParGenre() {
             className={`genre-btn${selectedGenre?.id === genre.id ? ' genre-btn--active' : ''}`}
             onClick={() => setSelectedGenre(genre)}
           >
-            {GENRES_FR[genre.name] ?? genre.name}
+            {translateGenre(genre.name)}
           </button>
         ))}
       </div>
 
       {selectedGenre && (
         <>
-          <h2 className="genre-title">Films : {GENRES_FR[selectedGenre.name] ?? selectedGenre.name}</h2>
+          <h2 className="genre-title">Films : {translateGenre(selectedGenre.name)}</h2>
           {loading && <p>Chargement…</p>}
           {error && <p className="search-error">{error}</p>}
-          {feedback && <p className="favorite-feedback">{feedback}</p>}
+          <Toast message={feedback} />
           {!loading && !error && results.length === 0 && (
             <p>Aucun film trouvé pour ce genre.</p>
           )}

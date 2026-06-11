@@ -2,15 +2,18 @@ import { useState, useEffect, useRef } from 'react'
 import { useLocation, useNavigate, Link } from 'react-router-dom'
 import useSearchMedia from '../hooks/useSearchMedia'
 import { addFavorite, getMediaTrailer } from '../services/tmdbService'
+import { getFavoritedIds, addFavoritedId } from '../utils/favorites'
 import SearchPanel from '../components/SearchPanel'
 import MediaCard from '../components/MediaCard'
+import Toast from '../components/Toast'
 
 function PageRechercheFilm() {
   const location = useLocation()
   const navigate = useNavigate()
-  const { query, loading, error, results, handleChange, handleSearch } = useSearchMedia('movies', location.state?.restoreQuery || '')
+  const { query, loading, error, results, handleChange, handleSearch, page, totalPages, handlePageChange } = useSearchMedia('movies', location.state?.restoreQuery || '')
   const [feedback, setFeedback] = useState('')
   const [trailers, setTrailers] = useState({})
+  const [favoritedIds, setFavoritedIds] = useState(() => getFavoritedIds('movies'))
   const searchGen = useRef(0)
 
   useEffect(() => {
@@ -20,7 +23,6 @@ function PageRechercheFilm() {
   }, [feedback])
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setTrailers({})
     const gen = ++searchGen.current
     results.forEach(item => {
@@ -39,6 +41,11 @@ function PageRechercheFilm() {
       ? `${item.title} ajouté aux favoris.`
       : "Impossible d'ajouter ce film aux favoris."
     )
+    if (saved) {
+      addFavoritedId('movies', item.id)
+      setFavoritedIds(prev => new Set([...prev, item.id]))
+    }
+    return saved
   }
 
   const handleCardClick = (item) => {
@@ -63,7 +70,7 @@ function PageRechercheFilm() {
 
       {loading && <p>Chargement…</p>}
       {error && <p className="search-error">{error}</p>}
-      {feedback && <p className="favorite-feedback">{feedback}</p>}
+      <Toast message={feedback} />
       {!loading && !error && results.length === 0 && query && <p>Aucun résultat pour cette recherche.</p>}
 
       <section className="card-grid">
@@ -82,10 +89,34 @@ function PageRechercheFilm() {
               trailerKey={trailers[item.id] || null}
               onCardClick={() => handleCardClick(item)}
               onFavorite={e => handleAddFavorite(e, item)}
+              isFavorited={favoritedIds.has(item.id)}
             />
           )
         })}
       </section>
+
+      {totalPages > 1 && (
+        <div className="pagination">
+          <button
+            type="button"
+            className="pagination-btn"
+            disabled={page <= 1}
+            onClick={() => handlePageChange(page - 1)}
+          >
+            ← Précédent
+          </button>
+          <span className="pagination-info">Page {page} / {totalPages}</span>
+          <button
+            type="button"
+            className="pagination-btn"
+            disabled={page >= totalPages}
+            onClick={() => handlePageChange(page + 1)}
+          >
+            Suivant →
+          </button>
+        </div>
+      )}
+
       <button type="button" className="back-link" onClick={() => navigate(-1)}>← Page précédente</button>
     </section>
   )

@@ -438,6 +438,22 @@ h2 { font-size: clamp(1.1rem, 3vw, 1.4rem); font-weight: 700; }
 }
 .back-link:hover { transform: translateY(-1px); background: var(--bg-elevated); border-color: rgba(255,255,255,0.18); }
 
+.pagination {
+  display: flex; align-items: center; justify-content: center;
+  gap: 1rem; margin: 2rem 0 1rem;
+}
+.pagination-btn {
+  background: var(--bg-card); color: var(--text-color);
+  border: 1px solid var(--border-color); border-radius: var(--radius-pill);
+  padding: 0.5rem 1.2rem; font: inherit; font-weight: 700; font-size: 0.88rem;
+  cursor: pointer; transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.pagination-btn:hover:not(:disabled) { border-color: var(--accent); transform: translateY(-1px); }
+.pagination-btn:disabled { opacity: 0.35; cursor: default; }
+.pagination-info { color: var(--muted-color); font-size: 0.9rem; }
+
+.recommandes-intro { color: var(--muted-color); margin-bottom: 1.5rem; }
+
 /* ─── Search panel ───────────────────────────────────────────────────────── */
 .search-panel {
   padding: 1rem 1.25rem;
@@ -478,6 +494,39 @@ h2 { font-size: clamp(1.1rem, 3vw, 1.4rem); font-weight: 700; }
 .favorite-btn:hover { border-color: var(--accent); transform: translateY(-1px); }
 
 .favorite-feedback { color: #86efac; font-weight: 600; font-size: 0.88rem; }
+
+.toast {
+  position: fixed;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-elevated);
+  color: var(--text-color);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-pill);
+  padding: 0.75rem 1.75rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  z-index: 9999;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+  animation: toast-in 0.25s ease;
+}
+.toast-star { color: gold; font-size: 1.1rem; }
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(12px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.favorite-star {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.8rem; color: gold; min-height: 2.5rem;
+  position: relative; z-index: 2;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+}
 .search-error { color: #fca5a5; font-weight: 600; }
 
 /* ─── Genre nav button ───────────────────────────────────────────────────── */

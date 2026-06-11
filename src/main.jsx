@@ -9,6 +9,7 @@ import PageRechercheFilm from './pages/PageRechercheFilm'
 import PageRechercheSerie from './pages/PageRechercheSerie'
 import PageParGenre from './pages/PageParGenre'
 import PageFavoris from './pages/PageFavoris'
+import PageRecommandes from './pages/PageRecommandes'
 
 // Point d'entrée de l'application React.
 // On crée ici les routes principales de l'application.
@@ -24,6 +25,7 @@ const router = createBrowserRouter([
       { path: '/serie/:id', element: <PageDetailMedia type="tv" /> },
       { path: '/par-genre', element: <PageParGenre /> },
       { path: '/favoris', element: <PageFavoris /> },
+      { path: '/recommandes', element: <PageRecommandes /> },
     ],
   },
 ])

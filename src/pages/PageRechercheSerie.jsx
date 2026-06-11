@@ -2,15 +2,18 @@ import { useState, useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import useSearchMedia from '../hooks/useSearchMedia'
 import { addFavorite, getMediaTrailer } from '../services/tmdbService'
+import { getFavoritedIds, addFavoritedId } from '../utils/favorites'
 import SearchPanel from '../components/SearchPanel'
 import MediaCard from '../components/MediaCard'
+import Toast from '../components/Toast'
 
 function PageRechercheSerie() {
   const location = useLocation()
   const navigate = useNavigate()
-  const { query, loading, error, results, handleChange, handleSearch } = useSearchMedia('tv', location.state?.restoreQuery || '')
+  const { query, loading, error, results, handleChange, handleSearch, page, totalPages, handlePageChange } = useSearchMedia('tv', location.state?.restoreQuery || '')
   const [feedback, setFeedback] = useState('')
   const [trailers, setTrailers] = useState({})
+  const [favoritedIds, setFavoritedIds] = useState(() => getFavoritedIds('series'))
   const searchGen = useRef(0)
 
   useEffect(() => {
@@ -39,6 +42,11 @@ function PageRechercheSerie() {
       ? `${item.name} ajouté aux favoris.`
       : "Impossible d'ajouter cette série aux favoris."
     )
+    if (saved) {
+      addFavoritedId('series', item.id)
+      setFavoritedIds(prev => new Set([...prev, item.id]))
+    }
+    return saved
   }
 
   const handleCardClick = (item) => {
@@ -61,7 +69,7 @@ function PageRechercheSerie() {
 
       {loading && <p>Chargement…</p>}
       {error && <p className="search-error">{error}</p>}
-      {feedback && <p className="favorite-feedback">{feedback}</p>}
+      <Toast message={feedback} />
       {!loading && !error && results.length === 0 && query && <p>Aucun résultat pour cette recherche.</p>}
 
       <section className="card-grid">
@@ -80,10 +88,34 @@ function PageRechercheSerie() {
               trailerKey={trailers[item.id] || null}
               onCardClick={() => handleCardClick(item)}
               onFavorite={e => handleAddFavorite(e, item)}
+              isFavorited={favoritedIds.has(item.id)}
             />
           )
         })}
       </section>
+
+      {totalPages > 1 && (
+        <div className="pagination">
+          <button
+            type="button"
+            className="pagination-btn"
+            disabled={page <= 1}
+            onClick={() => handlePageChange(page - 1)}
+          >
+            ← Précédent
+          </button>
+          <span className="pagination-info">Page {page} / {totalPages}</span>
+          <button
+            type="button"
+            className="pagination-btn"
+            disabled={page >= totalPages}
+            onClick={() => handlePageChange(page + 1)}
+          >
+            Suivant →
+          </button>
+        </div>
+      )}
+
       <button type="button" className="back-link" onClick={() => navigate(-1)}>← Page précédente</button>
     </section>
   )

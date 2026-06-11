@@ -1,6 +1,18 @@
+import { useState, useEffect } from 'react'
 import TrailerCard from './TrailerCard'
 
-function MediaCard({ item, title, date, posterUrl, trailerKey, onCardClick, onFavorite }) {
+function MediaCard({ item, title, date, posterUrl, trailerKey, onCardClick, onFavorite, isFavorited = false }) {
+  const [added, setAdded] = useState(isFavorited)
+
+  useEffect(() => { setAdded(isFavorited) }, [isFavorited])
+
+  const handleFavorite = async (e) => {
+    e.stopPropagation()
+    setAdded(true)
+    const ok = await onFavorite(e)
+    if (!ok) setAdded(false)
+  }
+
   return (
     <article
       className="choice-card media-card"
@@ -19,13 +31,14 @@ function MediaCard({ item, title, date, posterUrl, trailerKey, onCardClick, onFa
         <small>{date || 'Date inconnue'}</small>
         <p>{item.overview || 'Aucune description disponible.'}</p>
       </div>
-      <button
-        type="button"
-        className="favorite-btn"
-        onClick={e => { e.stopPropagation(); onFavorite(e) }}
-      >
-        Ajouter aux favoris
-      </button>
+      {added
+        ? <span className="favorite-star">★</span>
+        : (
+          <button type="button" className="favorite-btn" onClick={handleFavorite}>
+            Ajouter aux favoris
+          </button>
+        )
+      }
     </article>
   )
 }

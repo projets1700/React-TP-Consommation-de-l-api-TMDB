@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { getMediaDetails, addFavorite } from '../services/tmdbService'
+import { getFavoritedIds, addFavoritedId } from '../utils/favorites'
 import MediaDetail from '../components/MediaDetail'
+import Toast from '../components/Toast'
 
 function PageDetailMedia({ type }) {
   const { id } = useParams()
@@ -10,6 +12,8 @@ function PageDetailMedia({ type }) {
   const [media, setMedia] = useState(null)
   const [loading, setLoading] = useState(true)
   const [feedback, setFeedback] = useState('')
+  const favType = type === 'movies' ? 'movies' : 'series'
+  const [isFavorited, setIsFavorited] = useState(() => getFavoritedIds(favType).has(parseInt(id)))
 
   useEffect(() => {
     let ignore = false
@@ -48,6 +52,11 @@ function PageDetailMedia({ type }) {
       ? `${name} ajouté aux favoris.`
       : "Impossible d'ajouter aux favoris."
     )
+    if (saved) {
+      addFavoritedId(favType, media.id)
+      setIsFavorited(true)
+    }
+    return saved
   }
 
   if (loading) return <p className="page">Chargement du détail…</p>
@@ -55,7 +64,8 @@ function PageDetailMedia({ type }) {
 
   return (
     <section className="page">
-      <MediaDetail media={media} type={type} onFavorite={handleAddFavorite} feedback={feedback} />
+      <MediaDetail media={media} type={type} onFavorite={handleAddFavorite} isFavorited={isFavorited} />
+      <Toast message={feedback} />
       <button type="button" className="back-link" onClick={handleClose}>
         ← Retour à la recherche
       </button>
