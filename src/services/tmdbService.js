@@ -51,6 +51,17 @@ export async function getPopularMovies() {
   }
 }
 
+export async function getPopularSeries() {
+  try {
+    const response = await fetch(`${API_BASE}/api/tv/popular`)
+    if (!response.ok) throw new Error('Erreur API popular TV')
+    return await response.json()
+  } catch (error) {
+    console.error(error)
+    return { results: [] }
+  }
+}
+
 export async function getFavorites(type) {
   try {
     const response = await fetch(`${API_BASE}/api/favorites/${type}`)
