@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { getMediaDetails, addFavorite } from '../services/tmdbService'
-import { getFavoritedIds, addFavoritedId } from '../utils/favorites'
+import { addFavoritedId } from '../utils/favorites'
 import MediaDetail from '../components/MediaDetail'
 import Toast from '../components/Toast'
 
@@ -13,7 +13,7 @@ function PageDetailMedia({ type }) {
   const [loading, setLoading] = useState(true)
   const [feedback, setFeedback] = useState('')
   const favType = type === 'movies' ? 'movies' : 'series'
-  const [isFavorited, setIsFavorited] = useState(() => getFavoritedIds(favType).has(parseInt(id)))
+  const [isFavorited, setIsFavorited] = useState(false)
 
   useEffect(() => {
     let ignore = false

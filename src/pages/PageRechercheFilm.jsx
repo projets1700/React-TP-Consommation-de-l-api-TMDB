@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useLocation, useNavigate, Link } from 'react-router-dom'
 import useSearchMedia from '../hooks/useSearchMedia'
 import { addFavorite, getMediaTrailer } from '../services/tmdbService'
-import { getFavoritedIds, addFavoritedId } from '../utils/favorites'
+import { addFavoritedId } from '../utils/favorites'
 import SearchPanel from '../components/SearchPanel'
 import MediaCard from '../components/MediaCard'
 import Toast from '../components/Toast'
@@ -13,7 +13,7 @@ function PageRechercheFilm() {
   const { query, loading, error, results, handleChange, handleSearch, page, totalPages, handlePageChange } = useSearchMedia('movies', location.state?.restoreQuery || '')
   const [feedback, setFeedback] = useState('')
   const [trailers, setTrailers] = useState({})
-  const [favoritedIds, setFavoritedIds] = useState(() => getFavoritedIds('movies'))
+  const [favoritedIds, setFavoritedIds] = useState(new Set())
   const searchGen = useRef(0)
 
   useEffect(() => {

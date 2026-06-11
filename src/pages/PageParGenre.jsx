@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { getGenres, getMoviesByGenre, getMediaTrailer, addFavorite } from '../services/tmdbService'
-import { getFavoritedIds, addFavoritedId } from '../utils/favorites'
+import { addFavoritedId } from '../utils/favorites'
 import MediaCard from '../components/MediaCard'
 import Toast from '../components/Toast'
 import { translateGenre } from '../utils/genres'
@@ -17,7 +17,7 @@ function PageParGenre() {
   const [error, setError] = useState(null)
   const [feedback, setFeedback] = useState('')
   const [trailers, setTrailers] = useState({})
-  const [favoritedIds, setFavoritedIds] = useState(() => getFavoritedIds('movies'))
+  const [favoritedIds, setFavoritedIds] = useState(new Set())
   const searchGen = useRef(0)
 
   useEffect(() => {

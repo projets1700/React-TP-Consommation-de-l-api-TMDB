@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { getFavorites, deleteFavorite, updateFavoriteStatus } from '../services/tmdbService'
 import { removeFavoritedId } from '../utils/favorites'
 
-function FavCard({ item, type, onDelete, onMarkSeen }) {
+function FavCard({ item, type, onDelete, onMarkSeen, onNavigate }) {
   const title = type === 'movies' ? item.title : item.name
   const date = item.release_date || item.first_air_date || 'Date inconnue'
   const posterUrl = item.poster_path
@@ -11,7 +11,8 @@ function FavCard({ item, type, onDelete, onMarkSeen }) {
     : 'https://via.placeholder.com/500x750?text=Affiche+indisponible'
 
   return (
-    <article className="fav-card">
+    <article className="fav-card" onClick={onNavigate} role="button" tabIndex={0}
+      onKeyDown={e => e.key === 'Enter' && onNavigate()} style={{ cursor: 'pointer' }}>
       <img
         className="fav-poster"
         src={posterUrl}
@@ -26,11 +27,11 @@ function FavCard({ item, type, onDelete, onMarkSeen }) {
         </span>
         <div className="fav-actions">
           {item.status !== 'vu' && (
-            <button type="button" className="fav-btn fav-btn--seen" onClick={() => onMarkSeen(type, item.id)}>
+            <button type="button" className="fav-btn fav-btn--seen" onClick={e => { e.stopPropagation(); onMarkSeen(type, item.id) }}>
               Marquer comme vu
             </button>
           )}
-          <button type="button" className="fav-btn fav-btn--delete" onClick={() => onDelete(type, item.id)}>
+          <button type="button" className="fav-btn fav-btn--delete" onClick={e => { e.stopPropagation(); onDelete(type, item.id) }}>
             Supprimer
           </button>
         </div>
@@ -101,7 +102,7 @@ function PageFavoris() {
             : (
               <div className="fav-list">
                 {movies.map(item => (
-                  <FavCard key={item.id} item={item} type="movies" onDelete={handleDelete} onMarkSeen={handleMarkSeen} />
+                  <FavCard key={item.id} item={item} type="movies" onDelete={handleDelete} onMarkSeen={handleMarkSeen} onNavigate={() => navigate(`/film/${item.id}`)} />
                 ))}
               </div>
             )
@@ -113,7 +114,7 @@ function PageFavoris() {
             : (
               <div className="fav-list">
                 {series.map(item => (
-                  <FavCard key={item.id} item={item} type="series" onDelete={handleDelete} onMarkSeen={handleMarkSeen} />
+                  <FavCard key={item.id} item={item} type="series" onDelete={handleDelete} onMarkSeen={handleMarkSeen} onNavigate={() => navigate(`/serie/${item.id}`)} />
                 ))}
               </div>
             )
