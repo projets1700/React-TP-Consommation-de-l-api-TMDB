@@ -55,10 +55,10 @@ function PageDetailMedia({ type }) {
 
   return (
     <section className="page">
+      <MediaDetail media={media} type={type} onFavorite={handleAddFavorite} feedback={feedback} />
       <button type="button" className="back-link" onClick={handleClose}>
         ← Retour à la recherche
       </button>
-      <MediaDetail media={media} type={type} onFavorite={handleAddFavorite} feedback={feedback} />
     </section>
   )
 }
