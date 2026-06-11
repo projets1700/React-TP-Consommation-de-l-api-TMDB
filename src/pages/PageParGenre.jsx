@@ -3,6 +3,28 @@ import { useNavigate } from 'react-router-dom'
 import { getGenres, getMoviesByGenre, getMediaTrailer, addFavorite } from '../services/tmdbService'
 import MediaCard from '../components/MediaCard'
 
+const GENRES_FR = {
+  'Action': 'Action',
+  'Adventure': 'Aventure',
+  'Animation': 'Animation',
+  'Comedy': 'Comédie',
+  'Crime': 'Crime',
+  'Documentary': 'Documentaire',
+  'Drama': 'Drame',
+  'Family': 'Famille',
+  'Fantasy': 'Fantastique',
+  'History': 'Histoire',
+  'Horror': 'Horreur',
+  'Music': 'Musique',
+  'Mystery': 'Mystère',
+  'Romance': 'Romance',
+  'Science Fiction': 'Science-fiction',
+  'TV Movie': 'Téléfilm',
+  'Thriller': 'Thriller',
+  'War': 'Guerre',
+  'Western': 'Western',
+}
+
 function PageParGenre() {
   const navigate = useNavigate()
   const [genres, setGenres] = useState([])
@@ -91,14 +113,14 @@ function PageParGenre() {
             className={`genre-btn${selectedGenre?.id === genre.id ? ' genre-btn--active' : ''}`}
             onClick={() => setSelectedGenre(genre)}
           >
-            {genre.name}
+            {GENRES_FR[genre.name] ?? genre.name}
           </button>
         ))}
       </div>
 
       {selectedGenre && (
         <>
-          <h2 className="genre-title">Films : {selectedGenre.name}</h2>
+          <h2 className="genre-title">Films : {GENRES_FR[selectedGenre.name] ?? selectedGenre.name}</h2>
           {loading && <p>Chargement…</p>}
           {error && <p className="search-error">{error}</p>}
           {feedback && <p className="favorite-feedback">{feedback}</p>}
